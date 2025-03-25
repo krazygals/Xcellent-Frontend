@@ -29,7 +29,7 @@ const FileUpload = () => {
     formData.append("columns", JSON.stringify(["crsn", "course_no", "teach_name", "enrollment", "begin_time", "end_time"])); // Adjust as needed
 
     try {
-        const response = await axios.post("http://xcellent.onrender.com/upload", formData, {
+        const response = await axios.post("http://xcellent-backend.onrender.com/upload", formData, {
             headers: { "Content-Type": "multipart/form-data" },
       });
 
