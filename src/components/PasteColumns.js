@@ -33,8 +33,8 @@ const handleClean = () => {
 
   const handleTestMatch = async () => {
     try {
-      const response = await axios.post('/api/match-columns', {
-        user_columns: cleanedColumns
+        const response = await axios.post('https://xcellent.onrender.com/api/match-columns', {
+            user_columns: cleanedColumns
       });
       setMatches(response.data.suggested_matches);
     } catch (error) {
