@@ -8,18 +8,28 @@ const PasteColumns = () => {
   const [matches, setMatches] = useState(null);
 
   const extractColumnNames = (input) => {
-    const lines = input
-      .split(/\n|,/)
-      .map(line => line.trim().split(/\s+/)[0]) // Get first "word" on each line
-      .filter(word => /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(word)); // Filter valid SQL names
-    return [...new Set(lines)];
+    const lines = input.split(/\r?\n/);
+    const columns = [];
+  
+    for (let line of lines) {
+      // Match the first word after a vertical pipe OR just the first word
+      let match = line.match(/\|\s*([a-zA-Z0-9_]+)/) || line.match(/^\s*([a-zA-Z0-9_]+)/);
+      if (match && match[1]) {
+        columns.push(match[1].trim());
+      }
+    }
+  
+    // Remove duplicates and invalid entries
+    const unique = [...new Set(columns.filter(Boolean))];
+    return unique;
   };
 
-  const handleClean = () => {
-    const columns = extractColumnNames(rawText);
-    setCleanedColumns(columns);
-    setMatches(null); // Reset matches
-  };
+const handleClean = () => {
+  const columns = extractColumnNames(rawText);
+  console.log("🧼 Cleaned Columns:", columns);  // Add this line for testing
+  setCleanedColumns(columns);
+  setMatches(null); // Reset matches
+};
 
   const handleTestMatch = async () => {
     try {
