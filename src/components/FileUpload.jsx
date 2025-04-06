@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Button, CircularProgress, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import TextareaAutosize from "@mui/base/TextareaAutosize";
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -14,32 +15,52 @@ const FileUpload = () => {
     setError("");
   };
 
-  // Handle file upload
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      setError("Please select a file first.");
-      return;
+  const extractColumnNames = (sqlText) => {
+    const lines = sqlText.split("\n");
+    const columns = [];
+  
+    for (let line of lines) {
+      const parts = line.trim().split(/\s+/);
+      if (parts.length > 0 && parts[0].match(/^[a-zA-Z0-9_]+$/)) {
+        columns.push(parts[0]);
+      }
     }
-
-    setUploading(true);
-    setError("");
-
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    formData.append("columns", JSON.stringify(["crsn", "course_no", "teach_name", "enrollment", "begin_time", "end_time"])); // Adjust as needed
-
-    try {
-        const response = await axios.post("https://xcellent.onrender.com/upload", formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      setSuggestedMatches(response.data.suggested_matches);
-    } catch (err) {
-      setError("Upload failed. Please try again.");
-    } finally {
-      setUploading(false);
-    }
+  
+    return columns;
   };
+  
+  // Handle file upload
+const handleUpload = async () => {
+  if (!selectedFile) {
+    setError("Please select a file first.");
+    return;
+  }
+
+  const userColumns = extractColumnNames(sqlPaste);
+  if (userColumns.length === 0) {
+    setError("Please paste valid SQL output before uploading.");
+    return;
+  }
+
+  setUploading(true);
+  setError("");
+
+  const formData = new FormData();
+  formData.append("file", selectedFile);
+  formData.append("columns", JSON.stringify(userColumns)); // now using extracted columns
+
+  try {
+    const response = await axios.post("https://xcellent.onrender.com/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    setSuggestedMatches(response.data.suggested_matches);
+  } catch (err) {
+    setError("Upload failed. Please try again.");
+  } finally {
+    setUploading(false);
+  }
+};
 
   return (
     <div style={{ padding: 20, maxWidth: 600, margin: "auto", textAlign: "center" }}>
