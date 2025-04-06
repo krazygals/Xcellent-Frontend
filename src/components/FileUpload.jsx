@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Button, CircularProgress, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-import TextareaAutosize from "@mui/base/TextareaAutosize";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [suggestedMatches, setSuggestedMatches] = useState(null);
   const [error, setError] = useState("");
+  const [sqlPaste, setSqlPaste] = useState("");
 
   // Handle file selection
   const handleFileChange = (event) => {
@@ -68,6 +69,15 @@ const handleUpload = async () => {
       
       <input type="file" onChange={handleFileChange} accept=".xlsx" />
       
+            <TextareaAutosize
+        minRows={4}
+        placeholder="Paste SQL output here (e.g., from DESCRIBE or SHOW COLUMNS)"
+        value={sqlPaste}
+        onChange={(e) => setSqlPaste(e.target.value)}
+        style={{ width: '100%', marginTop: 20, padding: 10, fontSize: '1rem' }}
+        />
+
+
       {uploading ? (
         <CircularProgress style={{ margin: 20 }} />
       ) : (
