@@ -1,86 +1,87 @@
-import React, { useState } from 'react';
-import { TextField, Button, Typography, Box, List, ListItem } from '@mui/material';
-import axios from 'axios';
+import React, { useState } from "react";
+import { TextField, Button, Typography } from "@mui/material";
+import axios from "axios";
+import { purpleButtonStyle } from "../styles";
+import "./matchresults.css";
 
-const PasteColumns = () => {
-  const [rawText, setRawText] = useState('');
-  const [cleanedColumns, setCleanedColumns] = useState([]);
-  const [matches, setMatches] = useState(null);
+const BACKEND_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:8080"
+    : "https://xcellent.onrender.com";
+
+const PasteColumns = ({ setCleanedColumns, setMatches, detectedHeaders }) => {
+  const [rawText, setRawText] = useState("");
 
   const extractColumnNames = (input) => {
+    // Try to detect Excel-style paste (tabs or commas)
+    if (input.includes("\t") || input.includes(",")) {
+      // Excel paste detected
+      return input
+        .split(/[\t,]/)
+        .map((col) => col.trim())
+        .filter(Boolean);
+    }
+
+    // Otherwise, assume SQL-style paste
     const lines = input.split(/\r?\n/);
     const columns = [];
-  
+
     for (let line of lines) {
-      // Match the first word after a vertical pipe OR just the first word
-      let match = line.match(/\|\s*([a-zA-Z0-9_]+)/) || line.match(/^\s*([a-zA-Z0-9_]+)/);
+      let match =
+        line.match(/\|\s*([a-zA-Z0-9_]+)/) || line.match(/^\s*([a-zA-Z0-9_]+)/);
       if (match && match[1]) {
         columns.push(match[1].trim());
       }
     }
-  
-    // Remove duplicates and invalid entries
+
     const unique = [...new Set(columns.filter(Boolean))];
     return unique;
   };
 
-const handleClean = () => {
-  const columns = extractColumnNames(rawText);
-  console.log("🧼 Cleaned Columns:", columns);  // Add this line for testing
-  setCleanedColumns(columns);
-  setMatches(null); // Reset matches
-};
+  const handleClean = async () => {
+    const columns = extractColumnNames(rawText);
+    setCleanedColumns(columns);
 
-  const handleTestMatch = async () => {
     try {
-        const response = await axios.post('https://xcellent.onrender.com/api/match-columns', {
-            user_columns: cleanedColumns
+      const response = await axios.post(`${BACKEND_URL}/api/match-columns`, {
+        recognized_columns: detectedHeaders,
+        user_columns: columns,
       });
-      setMatches(response.data.suggested_matches);
+      console.log("API match response:", response.data); // ✅ Correct placement
+      setMatches(response.data.matches); // change from suggested_matches to matches
     } catch (error) {
-      console.error('Match error:', error);
+      console.error("Match error:", error);
+      setMatches(null);
     }
   };
 
   return (
-    <Box sx={{ p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
-      <Typography variant="h6">Paste SQL Columns</Typography>
-      <TextField
-        multiline
-        rows={10}
-        fullWidth
-        label="Paste your column info here"
-        value={rawText}
-        onChange={(e) => setRawText(e.target.value)}
-        sx={{ my: 2 }}
-      />
-      <Button variant="outlined" onClick={handleClean}>Clean & Preview</Button>
+    <>
+      <div className="table-container">
+        <Typography variant="h6">Input Columns</Typography>
+        <TextField
+          multiline
+          rows={10}
+          fullWidth
+          value={rawText}
+          onChange={(e) => setRawText(e.target.value)}
+          InputProps={{
+            style: {
+              color: "#fff",
+              backgroundColor: "#1c1c1c",
+              borderRadius: "8px",
+            },
+          }}
+          sx={{ mt: 2 }}
+        />
+      </div>
 
-      {cleanedColumns.length > 0 && (
-        <>
-          <Typography sx={{ mt: 2 }}>🧹 Cleaned Columns:</Typography>
-          <List dense>
-            {cleanedColumns.map((col, index) => (
-              <ListItem key={index}>{col}</ListItem>
-            ))}
-          </List>
-          <Button variant="contained" onClick={handleTestMatch}>Test Match</Button>
-        </>
-      )}
-
-      {matches && (
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="h6">🧠 Suggested Matches</Typography>
-          <List>
-            {Object.entries(matches).map(([userCol, dbCol], i) => (
-              <ListItem key={i}>
-                <strong>{userCol}</strong> → {dbCol}
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      )}
-    </Box>
+      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+        <Button onClick={handleClean} style={purpleButtonStyle}>
+          Clean & Preview
+        </Button>
+      </div>
+    </>
   );
 };
 

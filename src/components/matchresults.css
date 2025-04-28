@@ -1,0 +1,79 @@
+/* matchresults.css */
+.table-container {
+  margin-top: 2.5rem;
+  background: #1a1a1a;
+  border: 1px solid #3e3e3e;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(124, 77, 255, 0.25);
+  padding: 1.5rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.table-container h6 {
+  color: #b97df2;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #2a2a2a;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.9rem 1.2rem;
+  font-size: 0.95rem;
+  color: #eaeaea;
+  border-bottom: 1px solid #3e3e3e;
+}
+
+th {
+  color: #cfa9ff;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+tr:hover {
+  background: #2f2f2f;
+}
+
+@media (max-width: 768px) {
+  th,
+  td {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+}
+/* Extend styles for MUI compatibility */
+.MuiPaper-root {
+  background-color: #111 !important;
+  border-radius: 12px !important;
+}
+
+.MuiTableCell-root {
+  color: #eaeaea !important;
+  font-size: 0.95rem !important;
+  border-bottom: 1px solid #3e3e3e !important;
+  padding: 0.9rem 1.2rem !important;
+}
+
+.header-cell {
+  color: #cfa9ff !important;
+  background-color: #1c1c1c !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+}
+
+.MuiTableRow-hover:hover {
+  background-color: #2a2a2a !important;
+}

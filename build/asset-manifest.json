@@ -4,7 +4,5 @@
     "index.html": "/index.html",
     "main.bced6c45.js.map": "/static/js/main.bced6c45.js.map"
   },
-  "entrypoints": [
-    "static/js/main.bced6c45.js"
-  ]
+  "entrypoints": ["static/js/main.bced6c45.js"]
 }

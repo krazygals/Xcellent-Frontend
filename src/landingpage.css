@@ -1,0 +1,44 @@
+#banner {
+  padding: 4em;
+  text-align: center;
+  background: url("./assets/pic01.jpg") no-repeat center;
+  background-size: cover;
+  color: white;
+}
+
+.button.primary {
+  background-color: #3f51b5;
+  border: none;
+  padding: 1em 2em;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+#page-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  width: 100% !important;
+  position: static !important;
+}
+
+.wrapper,
+.inner {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  width: 100% !important;
+}
+
+body {
+  margin: 0;
+}
