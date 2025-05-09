@@ -9,6 +9,9 @@ const BACKEND_URL =
     ? "http://localhost:8080"
     : "https://xcellent.onrender.com";
 
+console.log("🚀 FormData being sent:", formData);
+console.log("🧾 Entries:", [...formData.entries()]);
+    
 const FileUpload = ({ setDetectedHeaders, detectedHeaders, setFilePath }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
