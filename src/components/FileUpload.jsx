@@ -8,9 +8,6 @@ const BACKEND_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:8080"
     : "https://xcellent.onrender.com";
-
-console.log("🚀 FormData being sent:", formData);
-console.log("🧾 Entries:", [...formData.entries()]);
     
 const FileUpload = ({ setDetectedHeaders, detectedHeaders, setFilePath }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -57,6 +54,8 @@ const FileUpload = ({ setDetectedHeaders, detectedHeaders, setFilePath }) => {
     );
 
     try {
+      console.log("🚀 FormData being sent:", formData);
+      console.log("🧾 Entries:", [...formData.entries()]);
       const response = await axios.post(`${BACKEND_URL}/upload`, formData, {
       });
 
