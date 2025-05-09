@@ -55,7 +55,6 @@ const FileUpload = ({ setDetectedHeaders, detectedHeaders, setFilePath }) => {
 
     try {
       const response = await axios.post(`${BACKEND_URL}/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
       });
 
       setSuggestedMatches(response.data.suggested_matches || {});
